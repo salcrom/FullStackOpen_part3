@@ -8,12 +8,21 @@ const App = () => {
     const addPhone = (event) => {
         event.preventDefault();
         console.log("form clicked", event.target);
-        const personObject = {
-            name: newName,
-        };
 
-        setPersons(persons.concat(personObject));
-        setNewName("");
+        persons.forEach((person) => {
+            if (newName === person.name) {
+                alert(`${newName} is already added to phonebok`);
+                setPersons(persons);
+                setNewName("");
+                return;
+            } else {
+                const personObject = {
+                    name: newName,
+                };
+                setPersons(persons.concat(personObject));
+                setNewName("");
+            }
+        });
     };
 
     const handlePhoneChange = (event) => {

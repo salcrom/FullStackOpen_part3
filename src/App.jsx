@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const App = (props) => {
+const App = () => {
     const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
     const [newName, setNewName] = useState("");
 
@@ -15,8 +15,10 @@ const App = (props) => {
                     <button type="submit">add</button>
                 </div>
             </form>
-            <h2>Numbers</h2>
-            ...
+            <>
+                <h2>Numbers</h2>
+                <div>debug: {newName}</div>
+            </>
         </div>
     );
 };

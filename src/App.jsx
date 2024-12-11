@@ -1,18 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import axios from "axios";
 import { Persons } from "./components/Persons";
 import { PersonForm } from "./components/PersonForm";
 import { Filter } from "./components/Filter";
 
 const App = () => {
-    const [persons, setPersons] = useState([
-        { name: "Arto Hellas", number: "040-123456", id: 1 },
-        { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-        { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-        { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-    ]);
+    const [persons, setPersons] = useState();
     const [newName, setNewName] = useState("");
     const [newNumber, setNewNumber] = useState("");
     const [filter, setFilter] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+
+    // console.log("persons - antes useEffect", persons);
+    // console.log("isLoading", isLoading);
+
+    useEffect(() => {
+        // console.log("persons - dentro useEffect", persons);
+        // console.log("isLoading - dentro useEffect - antes de axios", isLoading);
+
+        (async () => {
+            await axios
+                .get("http://localhost:3001/persons")
+                .then((response) => {
+                    setPersons(response.data);
+                });
+            setIsLoading(false);
+        })();
+    }, []);
 
     const handleInputChange = (setter) => (event) => setter(event.target.value);
 
@@ -47,6 +62,8 @@ const App = () => {
             setNewNumber("");
         }
     };
+
+    if (isLoading) return <>is loading...</>;
 
     return (
         <>

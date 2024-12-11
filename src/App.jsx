@@ -39,11 +39,7 @@ const App = () => {
         );
 
         if (existingPerson) {
-            if (
-                window.confirm(
-                    `${newName} is already added to phonebook, replace the old number with a new one?`
-                )
-            ) {
+            if (alert(`${newName} está ya añadido a la app de phonebook`)) {
                 const updatedPerson = { ...existingPerson, number: newNumber };
 
                 setPersons(

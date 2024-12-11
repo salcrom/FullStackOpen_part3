@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-import axios from "axios";
+// import axios from "axios";
+import personService from "./services/persons";
 import { Persons } from "./components/Persons";
 import { PersonForm } from "./components/PersonForm";
 import { Filter } from "./components/Filter";
@@ -16,18 +17,20 @@ const App = () => {
     // console.log("isLoading", isLoading);
 
     useEffect(() => {
-        // console.log("persons - dentro useEffect", persons);
-        // console.log("isLoading - dentro useEffect - antes de axios", isLoading);
+        // console.log("dentro del effect");
 
         (async () => {
-            await axios
-                .get("http://localhost:3001/persons")
-                .then((response) => {
-                    setPersons(response.data);
-                });
-            setIsLoading(false);
+            await personService.getAll().then((initialPersons) => {
+                // console.log("response en App.js", initialPersons);
+                setPersons(initialPersons);
+                // console.log(persons);
+                setIsLoading(false);
+            });
         })();
     }, []);
+
+    // console.log("persons - después useEffect", persons);
+    // console.log("isLoading", isLoading);
 
     const handleInputChange = (setter) => (event) => setter(event.target.value);
 
@@ -53,13 +56,11 @@ const App = () => {
                 name: newName,
                 number: newNumber,
             };
-            axios
-                .post("http://localhost:3001/persons", personObject)
-                .then((response) => {
-                    setPersons(persons.concat(response.data));
-                    setNewName("");
-                    setNewNumber("");
-                });
+            personService.create(personObject).then((response) => {
+                setPersons(persons.concat(response.data));
+                setNewName("");
+                setNewNumber("");
+            });
         }
     };
 

@@ -53,9 +53,13 @@ const App = () => {
                 name: newName,
                 number: newNumber,
             };
-            setPersons(persons.concat(personObject));
-            setNewName("");
-            setNewNumber("");
+            axios
+                .post("http://localhost:3001/persons", personObject)
+                .then((response) => {
+                    setPersons(persons.concat(response.data));
+                    setNewName("");
+                    setNewNumber("");
+                });
         }
     };
 
@@ -79,7 +83,7 @@ const App = () => {
                     addPerson={addPerson}
                     newName={newName}
                     handleNameChange={handleInputChange(setNewName)}
-                    setNumber={newNumber}
+                    newNumber={newNumber}
                     handleNumberChange={handleInputChange(setNewNumber)}
                 />
             </main>

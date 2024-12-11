@@ -21,7 +21,7 @@ export const PersonForm = ({
                 <label>
                     Number:
                     <input
-                        type="tel"
+                        type="text"
                         value={newNumber}
                         onChange={handleNumberChange}
                     />

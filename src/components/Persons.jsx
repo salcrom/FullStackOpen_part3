@@ -1,4 +1,4 @@
-export const Persons = ({ filter, persons }) => {
+export const Persons = ({ filter, persons, deletePerson }) => {
     // console.log({ filter, persons });
     const personsToShow = filter
         ? persons.filter((person) =>
@@ -10,7 +10,11 @@ export const Persons = ({ filter, persons }) => {
         <ul>
             {personsToShow.map((person) => (
                 <li key={person.name}>
-                    {person.name}: {person.number}
+                    {person.name} : {person.number} -{" "}
+                    <button onClick={() => deletePerson(person.id)}>
+                        {" "}
+                        delete
+                    </button>
                 </li>
             ))}
         </ul>

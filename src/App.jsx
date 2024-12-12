@@ -21,10 +21,10 @@ const App = () => {
 
         (async () => {
             await personService.getAll().then((initialPersons) => {
-                // console.log("response en App.js", initialPersons);
                 setPersons(initialPersons);
-                // console.log(persons);
                 setIsLoading(false);
+                // console.log("response en App.js", initialPersons);
+                // console.log(persons);
             });
         })();
     }, []);
@@ -40,6 +40,7 @@ const App = () => {
         const existingPerson = persons.find(
             (person) => person.name === newName
         );
+        console.log("existingPerson", existingPerson);
 
         if (existingPerson) {
             if (alert(`${newName} está ya añadido a la app de phonebook`)) {
@@ -56,12 +57,24 @@ const App = () => {
                 name: newName,
                 number: newNumber,
             };
+
             personService.create(personObject).then((response) => {
-                setPersons(persons.concat(response.data));
+                setPersons(persons.concat(response));
                 setNewName("");
                 setNewNumber("");
             });
         }
+    };
+
+    const deletePerson = (id) => {
+        console.log(`person con ${id} va a ser borrada`);
+        const personToDelete = persons.find((person) => person.id === id);
+        console.log(personToDelete);
+        if (!personToDelete) return;
+        personService.deletePerson(id).then((response) => {
+            console.log(`Deleted person with id ${id}`);
+            setPersons(persons.filter((person) => person.id !== id));
+        });
     };
 
     if (isLoading) return <>is loading...</>;
@@ -91,7 +104,11 @@ const App = () => {
 
             <footer>
                 <h3>Numbers</h3>
-                <Persons persons={persons} filter={filter} />
+                <Persons
+                    persons={persons}
+                    filter={filter}
+                    deletePerson={deletePerson}
+                />
             </footer>
         </>
     );

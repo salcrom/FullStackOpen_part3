@@ -12,6 +12,11 @@ const create = async (newObject) => {
     return await request.then((response) => response.data);
 };
 
+const update = async (newObject) => {
+    const request = axios.put(`${baseUrl}/${newObject.id}`, newObject);
+    return await request.then((response) => response.data);
+};
+
 const deletePerson = async (id) => {
     const request = axios.delete(`${baseUrl}/${id}`);
     console.log("request", request);
@@ -24,5 +29,6 @@ const deletePerson = async (id) => {
 export default {
     getAll,
     create,
+    update,
     deletePerson,
 };

@@ -43,14 +43,29 @@ const App = () => {
         console.log("existingPerson", existingPerson);
 
         if (existingPerson) {
-            if (alert(`${newName} está ya añadido a la app de phonebook`)) {
+            if (
+                window.confirm(
+                    `${newName} está ya añadido al phonebook, ¿quieres cambiar el número de teléfono`
+                )
+            ) {
                 const updatedPerson = { ...existingPerson, number: newNumber };
 
-                setPersons(
-                    persons.map((person) =>
-                        person.id !== existingPerson.id ? person : updatedPerson
-                    )
-                );
+                personService.update(updatedPerson).then((response) => {
+                    console.log("response", response);
+                    setPersons(
+                        persons.map((person) =>
+                            person.id !== existingPerson.id
+                                ? person
+                                : updatedPerson
+                        )
+                    );
+                });
+
+                setNewName("");
+                setNewNumber("");
+            } else {
+                setNewName("");
+                setNewNumber("");
             }
         } else {
             const personObject = {

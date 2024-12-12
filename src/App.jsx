@@ -5,6 +5,7 @@ import personService from "./services/persons";
 import { Persons } from "./components/Persons";
 import { PersonForm } from "./components/PersonForm";
 import { Filter } from "./components/Filter";
+import { Notification } from "./components/Notification";
 
 const App = () => {
     const [persons, setPersons] = useState();
@@ -12,6 +13,7 @@ const App = () => {
     const [newNumber, setNewNumber] = useState("");
     const [filter, setFilter] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [successMessage, setSuccessMessage] = useState("");
 
     // console.log("persons - antes useEffect", persons);
     // console.log("isLoading", isLoading);
@@ -52,6 +54,12 @@ const App = () => {
 
                 personService.update(updatedPerson).then((response) => {
                     console.log("response", response);
+                    setSuccessMessage(
+                        `El teléfono de ${updatedPerson.name} ha sido modificado`
+                    );
+                    setTimeout(() => {
+                        setSuccessMessage(null);
+                    }, 5000);
                     setPersons(
                         persons.map((person) =>
                             person.id !== existingPerson.id
@@ -74,6 +82,10 @@ const App = () => {
             };
 
             personService.create(personObject).then((response) => {
+                setSuccessMessage(`${personObject.name} ha sido añadido`);
+                setTimeout(() => {
+                    setSuccessMessage(null);
+                }, 5000);
                 setPersons(persons.concat(response));
                 setNewName("");
                 setNewNumber("");
@@ -98,6 +110,8 @@ const App = () => {
         <>
             <header>
                 <h2>Phonebook</h2>
+
+                <Notification message={successMessage} />
 
                 <Filter
                     filter={filter}

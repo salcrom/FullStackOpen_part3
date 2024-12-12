@@ -5,7 +5,8 @@ import personService from "./services/persons";
 import { Persons } from "./components/Persons";
 import { PersonForm } from "./components/PersonForm";
 import { Filter } from "./components/Filter";
-import { Notification } from "./components/Notification";
+import { SuccessNotification } from "./components/SuccessNotification";
+import { ErrorNotification } from "./components/ErrorNotification";
 
 const App = () => {
     const [persons, setPersons] = useState();
@@ -14,6 +15,7 @@ const App = () => {
     const [filter, setFilter] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState();
 
     // console.log("persons - antes useEffect", persons);
     // console.log("isLoading", isLoading);
@@ -52,22 +54,30 @@ const App = () => {
             ) {
                 const updatedPerson = { ...existingPerson, number: newNumber };
 
-                personService.update(updatedPerson).then((response) => {
-                    console.log("response", response);
-                    setSuccessMessage(
-                        `El teléfono de ${updatedPerson.name} ha sido modificado`
-                    );
-                    setTimeout(() => {
-                        setSuccessMessage(null);
-                    }, 5000);
-                    setPersons(
-                        persons.map((person) =>
-                            person.id !== existingPerson.id
-                                ? person
-                                : updatedPerson
-                        )
-                    );
-                });
+                personService
+                    .update(updatedPerson)
+                    .then((response) => {
+                        console.log("response", response);
+                        setSuccessMessage(
+                            `El teléfono de ${updatedPerson.name} ha sido modificado`
+                        );
+                        setTimeout(() => {
+                            setSuccessMessage(null);
+                        }, 5000);
+                        setPersons(
+                            persons.map((person) =>
+                                person.id !== existingPerson.id
+                                    ? person
+                                    : updatedPerson
+                            )
+                        );
+                    })
+                    .catch((error) => {
+                        setErrorMessage(error.message);
+                        setTimeout(() => {
+                            setErrorMessage(null);
+                        }, 5000);
+                    });
 
                 setNewName("");
                 setNewNumber("");
@@ -81,15 +91,23 @@ const App = () => {
                 number: newNumber,
             };
 
-            personService.create(personObject).then((response) => {
-                setSuccessMessage(`${personObject.name} ha sido añadido`);
-                setTimeout(() => {
-                    setSuccessMessage(null);
-                }, 5000);
-                setPersons(persons.concat(response));
-                setNewName("");
-                setNewNumber("");
-            });
+            personService
+                .create(personObject)
+                .then((response) => {
+                    setSuccessMessage(`${personObject.name} ha sido añadido`);
+                    setTimeout(() => {
+                        setSuccessMessage(null);
+                    }, 5000);
+                    setPersons(persons.concat(response));
+                    setNewName("");
+                    setNewNumber("");
+                })
+                .catch((error) => {
+                    setErrorMessage(error.message);
+                    setTimeout(() => {
+                        setErrorMessage(null);
+                    }, 5000);
+                });
         }
     };
 
@@ -111,7 +129,17 @@ const App = () => {
             <header>
                 <h2>Phonebook</h2>
 
-                <Notification message={successMessage} />
+                {successMessage ? (
+                    <SuccessNotification message={successMessage} />
+                ) : (
+                    ""
+                )}
+
+                {errorMessage ? (
+                    <ErrorNotification message={errorMessage} />
+                ) : (
+                    ""
+                )}
 
                 <Filter
                     filter={filter}

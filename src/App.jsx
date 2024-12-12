@@ -18,6 +18,10 @@ const App = () => {
         })();
     }, []);
 
+    if (!notes) {
+        return null;
+    }
+
     const addNote = (event) => {
         event.preventDefault();
         const noteObject = {

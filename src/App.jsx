@@ -35,7 +35,11 @@ const App = () => {
         <>
             <form onSubmit={searchCountry}>
                 find countries:
-                <input value={newCountry} onChange={handleInputChange} />
+                <input
+                    type="text"
+                    value={newCountry}
+                    onChange={handleInputChange}
+                />
             </form>
             <div>
                 {searchedCountries.length > 10 ? (
@@ -44,6 +48,13 @@ const App = () => {
                     searchedCountries.map((searchedCountry) => (
                         <div key={searchedCountry.name}>
                             {searchedCountry.name}
+                            <button
+                                onClick={() => {
+                                    setNewCountry(searchedCountry.name);
+                                }}
+                            >
+                                show
+                            </button>
                         </div>
                     ))
                 ) : (

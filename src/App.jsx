@@ -7,13 +7,21 @@ const App = () => {
 
     useEffect(() => {
         countriesService.getAll().then((response) => {
-            console.log("response", response);
+            setCountries(response);
         });
     }, []);
+
+    if (!countries) return null;
 
     const searchCountry = (event) => {
         event.preventDefault();
         console.log("Estoy buscando un país");
+        console.log(countries);
+
+        const countrySearched = countries.find((country) => {
+            country.name === newCountry;
+        });
+        console.log(countrySearched);
     };
 
     const handleInputChange = (event) => {

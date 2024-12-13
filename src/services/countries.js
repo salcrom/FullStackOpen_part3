@@ -9,7 +9,7 @@ const getAll = async () => {
         // console.log("response", response.data);
         return response.data.map(
             ({ name, capital, area, languages, flags }) => ({
-                name: name["official"],
+                name: name["common"],
                 capital,
                 area,
                 languages,

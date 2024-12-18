@@ -20,6 +20,8 @@ export const CountryDetails = ({ country }) => {
 
     console.log("weatherCountry", weatherCountry);
 
+    if (weatherCountry.length === 0) return <h1>Loading...</h1>;
+
     return (
         <section>
             <h2>{country.name}</h2>

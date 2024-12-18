@@ -5,12 +5,22 @@ const baseUrl = `https://studies.cs.helsinki.fi/restcountries`;
 const getAll = async () => {
     const request = axios.get(`${baseUrl}/api/all`);
 
-    return await request.then((response) => {
-        // console.log("response", response.data);
-        return response.data.map(
-            ({ name, capital, area, languages, flags }) => ({
+    return await request.then(({ data }) => {
+        // console.log("response", data);
+        return data.map(
+            ({
+                name,
+                capital,
+                capitalInfo,
+                population,
+                area,
+                languages,
+                flags,
+            }) => ({
                 name: name["common"],
                 capital,
+                population,
+                coordCapital: capitalInfo.latlng,
                 area,
                 languages,
                 flags,

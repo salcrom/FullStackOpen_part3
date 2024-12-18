@@ -1,93 +1,77 @@
 import { useEffect, useState } from "react";
 import countriesService from "./services/countries";
+import { CountryDetails } from "./components/CountryDetails";
+import { CountriesList } from "./components/CountriesList";
+
+// import weatherService from "./services/weather";
 
 const App = () => {
     const [countries, setCountries] = useState([]);
-    const [newCountry, setNewCountry] = useState("");
-    const [searchedCountries, setSearchedCountries] = useState([]);
+    const [filter, setFilter] = useState("");
+    const [selectedCountry, setSelectedCountry] = useState(null);
 
     useEffect(() => {
-        countriesService.getAll().then((response) => {
-            setCountries(response);
-        });
+        countriesService
+            .getAll()
+            .then((response) => {
+                setCountries(response); //Array de todos los países -> name, capital, coordCapital, area, languages, flags,
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }, []);
 
-    if (!countries) return null;
-
-    const searchCountry = (event) => {
-        event.preventDefault();
-        console.log("Estoy buscando un país");
-        // console.log(countries);
-
-        const countriesSearched = countries.filter((country) =>
-            country.name.toLowerCase().includes(newCountry.toLowerCase())
-        );
-        // console.log(countriesSearched);
-        setSearchedCountries(countriesSearched);
+    const handleFilterChange = (event) => {
+        setFilter(event.target.value);
     };
-    // console.log(searchedCountries);
 
-    const handleInputChange = (event) => {
-        setNewCountry(event.target.value);
+    const handleShowClick = (country) => {
+        setSelectedCountry(country);
     };
+
+    const countriesToShow = filter
+        ? countries.filter((country) =>
+              country.name.toLowerCase().includes(filter.toLowerCase())
+          )
+        : [];
+
+    console.log("filter", filter);
+    console.log("countries", countries);
+    console.log("countriesToShow", countriesToShow);
+    console.log("countriesToShow.lenght", countriesToShow.length);
+
+    if (countries.length === 0) return <h1>Loading...</h1>;
 
     return (
         <>
-            <form onSubmit={searchCountry}>
-                find countries:
+            <label>
+                Find countries:
                 <input
                     type="text"
-                    value={newCountry}
-                    onChange={handleInputChange}
+                    value={filter}
+                    onChange={handleFilterChange}
                 />
-            </form>
-            <div>
-                {searchedCountries.length > 10 ? (
-                    <div>Too many matches, specify another filter</div>
-                ) : searchedCountries.length > 1 ? (
-                    searchedCountries.map((searchedCountry) => (
-                        <div key={searchedCountry.name}>
-                            {searchedCountry.name}
-                            <button
-                                onClick={() => {
-                                    setNewCountry(searchedCountry.name);
-                                }}
-                            >
-                                show
-                            </button>
-                        </div>
-                    ))
-                ) : (
-                    searchedCountries.map((searchedCountry) => (
-                        <div key={searchedCountry.name}>
-                            <h1>{searchedCountry.name}</h1>
-                            capital {searchedCountry.capital}
-                            <br />
-                            area {searchedCountry.area}
-                            <br />
-                            <br />
-                            <strong>languages:</strong>
-                            <ul>
-                                {Object.keys(searchedCountry.languages).map(
-                                    (key, i) => (
-                                        <li key={i}>
-                                            {searchedCountry.languages[key]}
-                                        </li>
-                                    )
-                                )}
-                            </ul>
-                            <div>
-                                {
-                                    <img
-                                        src={searchedCountry.flags.png}
-                                        alt={searchedCountry.flags.alt}
-                                    />
-                                }
-                            </div>
-                        </div>
-                    ))
-                )}
-            </div>
+            </label>
+
+            {countriesToShow.length === 0 ? (
+                ""
+            ) : (
+                <div>
+                    {countriesToShow.length > 10 ? (
+                        <div>Too many matches, specify another filter</div>
+                    ) : countriesToShow.length === 1 ? (
+                        <CountryDetails country={countriesToShow[0]} />
+                    ) : (
+                        <CountriesList
+                            countriesToShow={countriesToShow}
+                            handleShowClick={handleShowClick}
+                        />
+                    )}
+                    {selectedCountry && (
+                        <CountryDetails country={selectedCountry} />
+                    )}
+                </div>
+            )}
         </>
     );
 };

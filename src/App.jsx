@@ -3,8 +3,6 @@ import countriesService from "./services/countries";
 import { CountryDetails } from "./components/CountryDetails";
 import { CountriesList } from "./components/CountriesList";
 
-// import weatherService from "./services/weather";
-
 const App = () => {
     const [countries, setCountries] = useState([]);
     const [filter, setFilter] = useState("");
@@ -35,10 +33,9 @@ const App = () => {
           )
         : [];
 
-    console.log("filter", filter);
-    console.log("countries", countries);
-    console.log("countriesToShow", countriesToShow);
-    console.log("countriesToShow.lenght", countriesToShow.length);
+    // console.log("filter", filter);
+    // console.log("countries", countries);
+    // console.log("countriesToShow", countriesToShow);
 
     if (countries.length === 0) return <h1>Loading...</h1>;
 
